@@ -5,11 +5,11 @@ function register() {
     let users = JSON.parse(localStorage.getItem("users")) || {};
 
     if (users[email]) {
-        document.getElementById("message").innerText = "❌ 이미 가입된 이메일입니다.";
+        document.getElementById("message").innerText = " 이미 가입된 이메일입니다.";
     } else {
         users[email] = password; 
         localStorage.setItem("users", JSON.stringify(users));
-        document.getElementById("message").innerText = "✅ 회원가입 성공!";
+        document.getElementById("message").innerText = " 회원가입 성공!";
         showPage("login"); // 회원가입 후 로그인 화면으로 이동
     }
 }
@@ -20,13 +20,13 @@ function login() {
     let users = JSON.parse(localStorage.getItem("users")) || {};
 
     if (!users[email]) {
-        document.getElementById("message").innerText = "❌ 회원가입되지 않은 이메일입니다.";
+        document.getElementById("message").innerText = " 회원가입되지 않은 이메일입니다.";
     } else if (users[email] === password) {
-        document.getElementById("message").innerText = "✅ 로그인 성공! 환영합니다.";
+        document.getElementById("message").innerText = " 로그인 성공! 환영합니다.";
         localStorage.setItem("loggedInUser", email); // 로그인 상태 저장
         showPage("home"); // 로그인 후 홈 화면으로 이동
     } else {
-        document.getElementById("message").innerText = "❌ 비밀번호가 틀렸습니다.";
+        document.getElementById("message").innerText = " 비밀번호가 틀렸습니다.";
     }
 }
 
