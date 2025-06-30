@@ -25,8 +25,8 @@ async function login(email, password) {
 
 // 테스트 실행
 (async () => {
-  const email = 'test@example.com';
-  const password = 'mypassword';
+  const email = 'yoodain1027@naver.com';
+  const password = '1234';
 
   await register(email, password);
   await login(email, password);
