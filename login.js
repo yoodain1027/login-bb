@@ -1,4 +1,5 @@
 // node_login_test.js
+require('dotenv').config();
 const fetch = require('node-fetch'); 
 
 async function register(email, password) {
