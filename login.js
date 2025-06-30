@@ -1,5 +1,5 @@
 // node_login_test.js
-const fetch = require('node-fetch'); // 설치 필요: npm install node-fetch
+const fetch = require('node-fetch'); 
 
 async function register(email, password) {
   const res = await fetch('http://localhost:3000/api/signup', {
