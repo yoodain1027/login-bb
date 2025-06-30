@@ -1,84 +1,43 @@
-// server.js
 require('dotenv').config();
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
+const fetch = require('node-fetch');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-const USERS_FILE = path.join(__dirname, 'users.json');
-
-// ────── Middleware ──────
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static('public'));
-
-// ────── 회원가입 라우터 ──────
-app.post('/api/signup', async (req, res) => {
+// ────── 회원가입 요청 함수 ──────
+async function register(email, password) {
   try {
-    const { email, password } = req.body;
-    const users = readUsers();
+    const res = await fetch('http://localhost:3000/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-    if (users[email]) {
-      return res.status(409).json({ message: '이미 가입된 이메일입니다.' });
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-    users[email] = hashed;
-    saveUsers(users);
-    res.json({ message: '회원가입 성공!' });
+    const data = await res.json();
+    console.log('[REGISTER]', data.message);
   } catch (err) {
-    console.error('[SIGNUP ERROR]', err.message);
-    res.status(500).json({ message: '서버 에러: 회원가입 실패' });
+    console.error('[REGISTER ERROR]', err.message);
   }
-});
+}
 
-// ────── 로그인 라우터 ──────
-app.post('/api/login', async (req, res) => {
+// ────── 로그인 요청 함수 ──────
+async function login(email, password) {
   try {
-    const { email, password } = req.body;
-    const users = readUsers();
+    const res = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-    if (!users[email]) {
-      return res.status(404).json({ message: '등록되지 않은 이메일입니다.' });
-    }
-
-    const match = await bcrypt.compare(password, users[email]);
-    if (!match) {
-      return res.status(401).json({ message: '비밀번호가 틀렸습니다.' });
-    }
-
-    res.json({ message: '로그인 성공! 환영합니다.' });
+    const data = await res.json();
+    console.log('[LOGIN]', data.message);
   } catch (err) {
     console.error('[LOGIN ERROR]', err.message);
-    res.status(500).json({ message: '서버 에러: 로그인 실패' });
-  }
-});
-
-// ────── 유저 파일 관련 함수 ──────
-function readUsers() {
-  try {
-    const file = fs.readFileSync(USERS_FILE, 'utf-8');
-    return JSON.parse(file);
-  } catch {
-    return {};
   }
 }
 
-function saveUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-}
+// ────── 테스트 실행 ──────
+(async () => {
+  const email = 'yoodain1027@naver.com';
+  const password = '1234';
 
-// ────── 서버 실행 ──────
-app.listen(PORT, () => {
-  console.log(`✅ 서버 실행 중: http://localhost:${PORT}`);
-});
-
-// ────── 글로벌 에러 핸들러 (선택사항) ──────
-process.on('uncaughtException', (err) => {
-  console.error('[Uncaught Exception]', err);
-});
+  await register(email, password);
+  await login(email, password);
+})();
