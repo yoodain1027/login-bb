@@ -1,32 +1,33 @@
-async function register() {
-  const email = document.getElementById("signup-email").value.toLowerCase();
-  const password = document.getElementById("signup-password").value;
+// node_login_test.js
+const fetch = require('node-fetch'); // 설치 필요: npm install node-fetch
 
-  const res = await fetch('/api/signup', {
+async function register(email, password) {
+  const res = await fetch('http://localhost:3000/api/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
   });
 
   const data = await res.json();
-  document.getElementById("message").innerText = data.message;
-  if (res.ok) showPage('login');
+  console.log('[REGISTER]', data.message);
 }
 
-async function login() {
-  const email = document.getElementById("login-email").value.toLowerCase();
-  const password = document.getElementById("login-password").value;
-
-  const res = await fetch('/api/login', {
+async function login(email, password) {
+  const res = await fetch('http://localhost:3000/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
   });
 
   const data = await res.json();
-  document.getElementById("message").innerText = data.message;
-  if (res.ok) {
-    localStorage.setItem("loggedInUser", email);
-    showPage("home");
-  }
+  console.log('[LOGIN]', data.message);
 }
+
+// 테스트 실행
+(async () => {
+  const email = 'test@example.com';
+  const password = 'mypassword';
+
+  await register(email, password);
+  await login(email, password);
+})();
